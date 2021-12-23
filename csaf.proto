@@ -1,0 +1,165 @@
+syntax = "proto3";
+
+package protocsaf;
+option go_package = "github.com/fkautz/protocsaf";
+
+message CsafMessage {
+
+  message Publisher {
+    string category = 1;
+    string contact_details = 2;
+    string issuing_authority = 3;
+    string name = 4;
+    string namespace = 5;
+  }
+
+  message RevisionHistory {
+    string number = 1;
+    string date = 2;
+    string summary = 3;
+  }
+
+  message Engine {
+    string name = 1;
+    string version = 2;
+  }
+
+  message Generator {
+    string date = 1;
+    Engine engine = 2;
+    string summary = 3;
+  }
+
+  message Tracking {
+    string id = 1;
+    string status = 2;
+    string version = 3;
+    repeated RevisionHistory revision_history = 4;
+    string initial_release_date = 5;
+    string current_release_date = 6;
+    Generator generator = 7;
+  }
+
+  message Note {
+    string title = 1;
+    string category = 2;
+    string text = 3;
+  }
+
+  message Distribution {
+    string text = 1;
+  }
+
+  message Reference {
+    string url = 1;
+    string summary = 2;
+  }
+
+  message AggregateSeverity {
+    string namespace = 1;
+    string text = 2;
+  }
+
+  message Document {
+    string lang = 1;
+    string title = 2;
+    string category = 3;
+    string csaf_version = 4;
+    Publisher publisher = 5;
+    Tracking tracking = 6;
+    repeated Note notes = 7;
+    Distribution distribution = 8;
+    repeated Reference references = 9;
+    AggregateSeverity aggregate_severity = 10;
+  }
+
+  message Product {
+    string product_id = 1;
+    string name = 2;
+  }
+
+  message Branch {
+    string name = 1;
+    string category = 2;
+    Product product = 3;
+    repeated Branch branches = 4;
+  }
+
+  message Relationship {
+    string product_reference = 1;
+    string category = 2;
+    string relates_to_product_reference = 3;
+    Product full_product_name = 4;
+  }
+
+  message ProductTree {
+    repeated Branch branches = 1;
+    repeated Relationship relationships = 2;
+  }
+
+  message VulnerabilityId {
+    string system_name = 1;
+    string text = 2;
+  }
+
+  message ProductStatus {
+    repeated string fixed = 1;
+    repeated string known_affected = 2;
+    repeated string known_not_affected = 3;
+    repeated string under_investigation = 4;
+  }
+
+  message CvssV3 {
+    string version = 1;
+    double baseScore = 2;
+    string baseSeverity = 3;
+    string vectorString = 4;
+  }
+
+  message Score {
+    repeated string products = 1;
+    CvssV3 cvss_v3 = 2;
+  }
+
+  message Remedation {
+    string details = 1;
+    string category = 2;
+    string url = 3;
+  }
+
+  message Involvement {
+    string party = 1;
+    string status = 2;
+  }
+
+  message Threat {
+    string details = 1;
+    string category = 2;
+  }
+
+  message Acknowledgement {
+    repeated string names = 1;
+    string organization = 2;
+    string summary = 3;
+  }
+
+  message Vulnerability {
+    string title = 1;
+    VulnerabilityId id = 2;
+    repeated Note notes = 3;
+    string cve = 4;
+    ProductStatus product_status = 5;
+    repeated Score scores = 6;
+    repeated Remedation remediations = 7;
+    repeated Reference references = 8;
+    string discovery_date = 9;
+    string release_date = 10;
+    repeated Involvement involvements = 11;
+    repeated Threat threats = 12;
+    repeated Acknowledgement acknowledgments = 13;
+  }
+
+  Document document = 1;
+  ProductTree product_tree = 2;
+  repeated Vulnerability vulnerabilities = 3;
+}
